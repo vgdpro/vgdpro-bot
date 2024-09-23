@@ -31,7 +31,7 @@ export function apply(ctx: Context) {
 }
 
 function read_json_by_id(search_card: string) {
-  const json = JSON.parse(readFileSync('./external/cardsearch/src/cards.json', 'utf8'));
+  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
   for (let i = 0; i< json.cards.length; i++) {
     if (json.cards[i].card_id == search_card){ return [i]; }
   }
@@ -41,7 +41,7 @@ function read_json_by_id(search_card: string) {
 function read_json_by_name(search_card: string) {
   let search_result = [];
   let except = [];
-  const json = JSON.parse(readFileSync('./external/cardsearch/src/cards.json', 'utf8'));
+  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
   for (let i = 0; i< json.cards.length; i++) {
     if (json.cards[i].card_name == search_card){ return [i]; }
     for (let search_character of search_card) {
@@ -91,7 +91,7 @@ function result_card(group: number[], card: string, url: boolean = false) {
 }
 
 function chk_message(table: number[], card: string, url: boolean = false) {
-  const json = JSON.parse(readFileSync('./external/cardsearch/src/cards.json', 'utf8'));
+  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
   let result_table = []
   result_table = table.filter((i) => json.cards[i].card_name.includes(card));
   if (result_table.length > 0){
@@ -107,7 +107,7 @@ function chk_message(table: number[], card: string, url: boolean = false) {
 }
 
 function result_message(i: number, url: boolean = false) {
-  const json = JSON.parse(readFileSync('./external/cardsearch/src/cards.json', 'utf8'));
+  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
   let table=[
     json.cards[i].card_name,
     json.cards[i].card_id,
@@ -257,7 +257,7 @@ function is_number(str: string) {
 }
 
 function setcard(setcard: number) {
-  const json = JSON.parse(readFileSync('./external/cardsearch/src/setcard.json', 'utf8'));
+  const json = JSON.parse(readFileSync('./external/setcard.json', 'utf8'));
   for (let i = 0; i< json.setcard.length; i++){
     if (json.setcard[i].id == setcard){ return json.setcard[i].name; }
   }
