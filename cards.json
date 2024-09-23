@@ -21,7 +21,7 @@
         "card_country": "龙族帝国",
         "card_bloc": "-",
         "card_type": "单位|衍生",
-        "card_setcard": ["3001", "d2", "200", "5048"],
+        "card_setcard": ["3001", "00d2", "0200", "5048", "3047"],
         "card_level": "3",
         "card_skill": "双判|人格骑升",
         "card_trigger": "-",

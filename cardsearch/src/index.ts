@@ -142,8 +142,8 @@ function result_message(i: number, url: boolean = false) {
   let str = '找到卡片';
   for (let ct = 0; ct < table.length; ct++) {
     if (ct == 5) {
-      if (table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal('1') && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal('3f')).length > 0) {
-        let race = table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal('1') && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal('3f'));
+      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f')).length > 0) {
+        let race = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f'));
         str += '\n';
         str += json.head.card_setcard[0];
         str += '\u00A0';
@@ -151,16 +151,14 @@ function result_message(i: number, url: boolean = false) {
         let a = 0;
         race.forEach(element => {
           if (a > 0) {
-            str += '\u00A0';
-            str += ',';
-            str += '\u00A0';
+            str += '|';
           }
-          str += setcard(element);
+          str += setcard(element.replace(/^0+/g, ''));
           a++;
         });
       }
-      if (table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal(return_three_lenght('3040')) && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal(return_three_lenght('c06f'))).length > 0) {
-        let spell_type = table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal(return_three_lenght('3040')) && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal(return_three_lenght('c06f')));
+      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f'))).length > 0) {
+        let spell_type = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f')));
         str += '\n';
         str += json.head.card_setcard[1];
         str += '\u00A0';
@@ -168,16 +166,14 @@ function result_message(i: number, url: boolean = false) {
         let a = 0;
         spell_type.forEach(element => {
           if (a > 0) {
-            str += '\u00A0';
-            str += ',';
-            str += '\u00A0';
+            str += '|';
           }
-          str += setcard(element);
+          str += setcard(element.replace(/^0+/g, ''));
           a++;
         });
       }
-      if (table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal('70') && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal('1ff')).length > 0) {
-        let name = table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal('70') && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal('1ff'));
+      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff')).length > 0) {
+        let name = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff'));
         str += '\n';
         str += json.head.card_setcard[2];
         str += '\u00A0';
@@ -185,16 +181,14 @@ function result_message(i: number, url: boolean = false) {
         let a = 0;
         name.forEach(element => {
           if (a > 0) {
-            str += '\u00A0';
-            str += ',';
-            str += '\u00A0';
+            str += '|';
           }
-          str += setcard(element);
+          str += setcard(element.replace(/^0+/g, ''));
           a++;
         });
       }
-      if (table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal('200') && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal('21f')).length > 0) {
-        let skill = table[ct].filter((a) => hex_to_decimal(return_three_lenght(a)) >= hex_to_decimal('200') && hex_to_decimal(return_three_lenght(a)) < hex_to_decimal('21f'));
+      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f')).length > 0) {
+        let skill = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f'));
         str += '\n';
         str += json.head.card_setcard[3];
         str += '\u00A0';
@@ -202,11 +196,9 @@ function result_message(i: number, url: boolean = false) {
         let a = 0;
         skill.forEach(element => {
           if (a > 0) {
-            str += '\u00A0';
-            str += ',';
-            str += '\u00A0';
+            str += '|';
           }
-          str += setcard(element);
+          str += setcard(element.replace(/^0+/g, ''));
           a++;
         });
       }
@@ -238,13 +230,13 @@ function hex_to_decimal(str: string) {
   return num;
 }
 
-function return_three_lenght(str: string) {
+function change_hex_string(str: string) {
   let i: string[] = Array.from(str) as string[];
-  let num = ' ';
+  let a = '0';
   for (let ct = 0; ct < i.length; ct++) {
-    if (i.length - ct <= 3) { num += i[ct]; }
+    if (i.length - ct <= 3) { a += (i[ct]); }
   }
-  return num;
+  return a.replace(/^0+/g, '');
 }
 
 function is_number(str: string) {
@@ -256,7 +248,7 @@ function is_number(str: string) {
   return true
 }
 
-function setcard(setcard: number) {
+function setcard(setcard: string) {
   const json = JSON.parse(readFileSync('./external/setcard.json', 'utf8'));
   for (let i = 0; i< json.setcard.length; i++){
     if (json.setcard[i].id == setcard){ return json.setcard[i].name; }
