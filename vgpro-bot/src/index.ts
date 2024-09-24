@@ -5,7 +5,7 @@ export const name = 'cardsearch'
 export interface Config {}
 
 export const Config: Schema<Config> = Schema.object({})
-
+//
 const koishi = require("koishi");
 
 const { readFileSync, writeFileSync } = require('fs');
@@ -15,6 +15,15 @@ const search_none = '未找到符合条件的卡片';
 const numbers_string = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
 
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+const message = [
+  'VGPro是一款由VGPro制作组自主研发的一款全新开放世界打牌游戏，游戏发生在一个被称作「卡片战斗先导者」的幻想牌桌，在这里，被命运选中的人将被授予「命运者卡片」，获得挑战命运的机会。你将扮演被「命运者卡片」选中的其中一人，以先导者对战，争夺改变命运的力量——同时，逐步发掘「命运大战」的真相。',
+  '你好，我是VGProject官方机器人，你可以使用/sc命令搜索卡片，或使用/rc命令随机抽出卡池中的一张卡。'
+]
+
+const cards_json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
+
+const setcard_json = JSON.parse(readFileSync('./external/setcard.json', 'utf8'));
 
 export function apply(ctx: Context) {
   ctx.command("sc <card>")
@@ -28,12 +37,31 @@ export function apply(ctx: Context) {
       session.send((0, koishi.h)('message', text, (0, koishi.h)('image', { url: url })));
     }
   })
+  ctx.command("rc").action(({session})=>{
+    let random_code = random();
+    let text = result_message(random_code);
+    let url = result_message(random_code, true);
+    session.send((0, koishi.h)('message', text, (0, koishi.h)('image', { url: url })));
+  })
+  ctx.command("vgpro").action(({session})=>{
+    session.send((0, koishi.h)('message', message[0]));
+  })
+  ctx.command("关于").action(({session})=>{
+    session.send((0, koishi.h)('message', message[1]));
+  })
+  ctx.command("vgpro用户群").action(({session})=>{
+    // let url = 
+    session.send((0, koishi.h)('message', message[2], (0, koishi.h)('image', { url: url })));
+  })
+}
+
+function random() {
+  return Math.floor(Math.random() * (cards_json.cards.length - 1));
 }
 
 function read_json_by_id(search_card: string) {
-  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
-  for (let i = 0; i< json.cards.length; i++) {
-    if (json.cards[i].card_id == search_card){ return [i]; }
+  for (let i = 0; i< cards_json.cards.length; i++) {
+    if (cards_json.cards[i].card_id == search_card){ return [i]; }
   }
   return []
 }
@@ -41,11 +69,10 @@ function read_json_by_id(search_card: string) {
 function read_json_by_name(search_card: string) {
   let search_result = [];
   let except = [];
-  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
-  for (let i = 0; i< json.cards.length; i++) {
-    if (json.cards[i].card_name == search_card){ return [i]; }
+  for (let i = 0; i< cards_json.cards.length; i++) {
+    if (cards_json.cards[i].card_name == search_card){ return [i]; }
     for (let search_character of search_card) {
-      if (json.cards[i].card_name.includes(search_character)) {
+      if (cards_json.cards[i].card_name.includes(search_character)) {
         if (search_result.indexOf(i) == -1 && except.indexOf(i) == -1) { search_result.push(i); }
       }else{
         if (search_result.indexOf(i) > -1) {
@@ -60,11 +87,11 @@ function read_json_by_name(search_card: string) {
   if (search_result.length == 0 && except.length > 0) {
     for (let i of except) {
       for (let search_character of search_card) {
-        if (!json.cards[i].card_name.includes(search_character)) {
+        if (!cards_json.cards[i].card_name.includes(search_character)) {
           t.push(i);
         }
       }
-      for (let name_character of json.cards[i].card_name) {
+      for (let name_character of cards_json.cards[i].card_name) {
         if (!search_card.includes(name_character)) {
           t.push(i);
         }
@@ -91,53 +118,51 @@ function result_card(group: number[], card: string, url: boolean = false) {
 }
 
 function chk_message(table: number[], card: string, url: boolean = false) {
-  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
   let result_table = []
-  result_table = table.filter((i) => json.cards[i].card_name.includes(card));
+  result_table = table.filter((i) => cards_json.cards[i].card_name.includes(card));
   if (result_table.length > 0){
-    result_table.sort((a, b) => json.cards[a].card_name.length - json.cards[b].card_name.length)
+    result_table.sort((a, b) => cards_json.cards[a].card_name.length - cards_json.cards[b].card_name.length)
     return result_message(result_table[0], url);
   }
-  result_table = table.filter((i) => json.cards[i].card_name.length >= card,length);
+  result_table = table.filter((i) => cards_json.cards[i].card_name.length >= card,length);
   if (result_table.length > 0){
-    result_table.sort((a, b) => json.cards[a].card_name.length - json.cards[b].card_name.length)
+    result_table.sort((a, b) => cards_json.cards[a].card_name.length - cards_json.cards[b].card_name.length)
     return result_message(result_table[0], url);
   }
   return search_none;
 }
 
 function result_message(i: number, url: boolean = false) {
-  const json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
   let table=[
-    json.cards[i].card_name,
-    json.cards[i].card_id,
-    json.cards[i].card_country,
-    json.cards[i].card_bloc,
-    json.cards[i].card_type,
-    json.cards[i].card_setcard,
-    json.cards[i].card_level,
-    json.cards[i].card_skill,
-    json.cards[i].card_trigger,
-    json.cards[i].card_atk,
-    json.cards[i].card_def,
-    json.cards[i].card_critical_strike,
-    json.cards[i].card_text
+    cards_json.cards[i].card_name,
+    cards_json.cards[i].card_id,
+    cards_json.cards[i].card_country,
+    cards_json.cards[i].card_bloc,
+    cards_json.cards[i].card_type,
+    cards_json.cards[i].card_setcard,
+    cards_json.cards[i].card_level,
+    cards_json.cards[i].card_skill,
+    cards_json.cards[i].card_trigger,
+    cards_json.cards[i].card_atk,
+    cards_json.cards[i].card_def,
+    cards_json.cards[i].card_critical_strike,
+    cards_json.cards[i].card_text
   ];
   if (url) { return 'https://gitee.com/jwyxym/vgdpro-pics/raw/main/' + table[1] + '.jpg'; }
   let example=[
-    json.head.card_name,
-    json.head.card_id,
-    json.head.card_country,
-    json.head.card_bloc,
-    json.head.card_type,
-    json.head.card_setcard,
-    json.head.card_level,
-    json.head.card_skill,
-    json.head.card_trigger,
-    json.head.card_atk,
-    json.head.card_def,
-    json.head.card_critical_strike,
-    json.head.card_text
+    cards_json.head.card_name,
+    cards_json.head.card_id,
+    cards_json.head.card_country,
+    cards_json.head.card_bloc,
+    cards_json.head.card_type,
+    cards_json.head.card_setcard,
+    cards_json.head.card_level,
+    cards_json.head.card_skill,
+    cards_json.head.card_trigger,
+    cards_json.head.card_atk,
+    cards_json.head.card_def,
+    cards_json.head.card_critical_strike,
+    cards_json.head.card_text
   ]
   let str = '找到卡片';
   for (let ct = 0; ct < table.length; ct++) {
@@ -145,7 +170,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f')).length > 0) {
         let race = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f'));
         str += '\n';
-        str += json.head.card_setcard[0];
+        str += cards_json.head.card_setcard[0];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -160,7 +185,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f'))).length > 0) {
         let spell_type = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f')));
         str += '\n';
-        str += json.head.card_setcard[1];
+        str += cards_json.head.card_setcard[1];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -175,7 +200,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff')).length > 0) {
         let name = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff'));
         str += '\n';
-        str += json.head.card_setcard[2];
+        str += cards_json.head.card_setcard[2];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -190,7 +215,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f')).length > 0) {
         let skill = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f'));
         str += '\n';
-        str += json.head.card_setcard[3];
+        str += cards_json.head.card_setcard[3];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -249,8 +274,7 @@ function is_number(str: string) {
 }
 
 function setcard(setcard: string) {
-  const json = JSON.parse(readFileSync('./external/setcard.json', 'utf8'));
-  for (let i = 0; i< json.setcard.length; i++){
-    if (json.setcard[i].id == setcard){ return json.setcard[i].name; }
+  for (let i = 0; i< setcard_json.setcard.length; i++){
+    if (setcard_json.setcard[i].id == setcard){ return setcard_json.setcard[i].name; }
   }
 }

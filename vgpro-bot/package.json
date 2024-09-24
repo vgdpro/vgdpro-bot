@@ -1,6 +1,6 @@
 {
-  "name": "koishi-plugin-talk",
-  "description": "send some message",
+  "name": "koishi-plugin-vgpro-bot",
+  "description": "a bot made by vgpro and it can search vg card",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
