@@ -173,7 +173,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f')).length > 0) {
         let race = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f'));
         str += '\n';
-        str += strings_json.text.card_setcard[0];
+        str += example[ct][0];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -188,7 +188,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f'))).length > 0) {
         let spell_type = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f')));
         str += '\n';
-        str += strings_json.text.card_setcard[1];
+        str += example[ct][1];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -203,7 +203,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff')).length > 0) {
         let name = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff'));
         str += '\n';
-        str += strings_json.text.card_setcard[2];
+        str += example[ct][2];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -218,7 +218,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f')).length > 0) {
         let skill = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f'));
         str += '\n';
-        str += strings_json.text.card_setcard[3];
+        str += example[ct][3];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
