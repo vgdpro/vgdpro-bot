@@ -26,6 +26,8 @@ const cards_json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
 
 const setcard_json = JSON.parse(readFileSync('./external/setcard.json', 'utf8'));
 
+const strings_json = JSON.parse(readFileSync('./external/strings.json', 'utf8'));
+
 export function apply(ctx: Context) {
   ctx.command("sc <card>")
   .action(({session}, card: string)=>{
@@ -151,19 +153,19 @@ function result_message(i: number, url: boolean = false) {
   ];
   if (url) { return 'https://gitee.com/jwyxym/vgdpro-pics/raw/main/' + table[1] + '.jpg'; }
   let example=[
-    cards_json.head.card_name,
-    cards_json.head.card_id,
-    cards_json.head.card_country,
-    cards_json.head.card_bloc,
-    cards_json.head.card_type,
-    cards_json.head.card_setcard,
-    cards_json.head.card_level,
-    cards_json.head.card_skill,
-    cards_json.head.card_trigger,
-    cards_json.head.card_atk,
-    cards_json.head.card_def,
-    cards_json.head.card_critical_strike,
-    cards_json.head.card_text
+    strings_json.text.card_name,
+    strings_json.text.card_id,
+    strings_json.text.card_country,
+    strings_json.text.card_bloc,
+    strings_json.text.card_type,
+    strings_json.text.card_setcard,
+    strings_json.text.card_level,
+    strings_json.text.card_skill,
+    strings_json.text.card_trigger,
+    strings_json.text.card_atk,
+    strings_json.text.card_def,
+    strings_json.text.card_critical_strike,
+    strings_json.text.card_text
   ]
   let str = '找到卡片';
   for (let ct = 0; ct < table.length; ct++) {
@@ -171,7 +173,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f')).length > 0) {
         let race = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f'));
         str += '\n';
-        str += cards_json.head.card_setcard[0];
+        str += strings_json.text.card_setcard[0];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -186,7 +188,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f'))).length > 0) {
         let spell_type = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f')));
         str += '\n';
-        str += cards_json.head.card_setcard[1];
+        str += strings_json.text.card_setcard[1];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -201,7 +203,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff')).length > 0) {
         let name = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff'));
         str += '\n';
-        str += cards_json.head.card_setcard[2];
+        str += strings_json.text.card_setcard[2];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -216,7 +218,7 @@ function result_message(i: number, url: boolean = false) {
       if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f')).length > 0) {
         let skill = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f'));
         str += '\n';
-        str += cards_json.head.card_setcard[3];
+        str += strings_json.text.card_setcard[3];
         str += '\u00A0';
         str += '\u00A0';
         let a = 0;
@@ -275,7 +277,7 @@ function is_number(str: string) {
 }
 
 function setcard(setcard: string) {
-  for (let i = 0; i< setcard_json.setcard.length; i++){
-    if (setcard_json.setcard[i].id == setcard){ return setcard_json.setcard[i].name; }
+  for (let i = 0; i< setcard_json.length; i++){
+    if (setcard_json[i].id == setcard){ return setcard_json[i].name; }
   }
 }

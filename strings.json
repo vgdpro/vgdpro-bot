@@ -1,0 +1,101 @@
+{
+    "text": {
+        "card_name": "卡名：",
+        "card_id": "VGPro卡号:",
+        "card_country": "国家:",
+        "card_bloc": "集团:",
+        "card_type": "类型:",
+        "card_setcard": ["种族:", "指令类型:", "卡名含有:", "具备能力:"],
+        "card_level": "等级:",
+        "card_skill": "技能类型:",
+        "card_trigger": "触发类型:",
+        "card_atk": "力量:",
+        "card_def": "盾护:",
+        "card_critical_strike": "☆:",
+        "card_text": "文本:"
+    },
+    "skill": [
+        {"id": "2", "name": "支援"},
+        {"id": "4", "name": "截击"},
+        {"id": "8", "name": "三判"},
+        {"id": "10", "name": "双判"},
+        {"id": "20", "name": "人格骑升"},
+        {"id": "40", "name": "结晶碎片"}
+    ],
+    "trigger": [
+        {"id": "2", "name": "暴击触发"},
+        {"id": "4", "name": "抽牌触发"},
+        {"id": "8", "name": "治愈触发"},
+        {"id": "10", "name": "前列触发"},
+        {"id": "20", "name": "超限触发"}
+    ],
+    "country": [
+        {"id": "2", "name": "王冠圣域", "serial_number": "0"},
+        {"id": "4", "name": "龙族帝国", "serial_number": "1"},
+        {"id": "8", "name": "布兰特之门", "serial_number": "2"},
+        {"id": "10", "name": "暗邦", "serial_number": "3"},
+        {"id": "20", "name": "基元", "serial_number": "4"},
+        {"id": "40", "name": "圣律诗院", "serial_number": "5"},
+        {"id": "80", "name": "刀剑乱舞", "serial_number": "6"},
+        {"id": "100", "name": "BanG Dream!", "serial_number": "7"},
+        {"id": "200", "name": "怪物弹珠", "serial_number": "8"},
+        {"id": "400", "name": "通灵王", "serial_number": "9"},
+        {"id": "800", "name": "终末的女武神", "serial_number": "10"}
+    ],
+    "bloc": [
+        [
+            {"id": "1", "name": "光辉骑士团"},
+            {"id": "2", "name": "占卜魔法团"},
+            {"id": "3", "name": "天使之羽"},
+            {"id": "4", "name": "暗影骑士团"},
+            {"id": "5", "name": "黄金骑士团"},
+            {"id": "6", "name": "创世"}
+        ],
+        [
+            {"id": "1", "name": "阳炎"},
+            {"id": "2", "name": "射干玉"},
+            {"id": "3", "name": "太刀风"},
+            {"id": "4", "name": "丛云"},
+            {"id": "5", "name": "鸣神"}
+        ],
+        [
+            {"id": "1", "name": "搏击新星"},
+            {"id": "2", "name": "次元警察"},
+            {"id": "3", "name": "链环傀儡"}
+        ],
+        [
+            {"id": "1", "name": "钢钉兄弟会"},
+            {"id": "2", "name": "黑暗不法者"},
+            {"id": "3", "name": "黯月"},
+            {"id": "4", "name": "齿轮编年史"}
+        ],
+        [
+            {"id": "1", "name": "百群"},
+            {"id": "2", "name": "大自然"},
+            {"id": "3", "name": "永生蜜酒"},
+            {"id": "4", "name": "雄伟深蓝"},
+            {"id": "5", "name": "苍海军势"}
+        ],
+        [
+            {"id": "1", "name": "百慕大三角"}
+        ],
+        [ ],
+        [ ],
+        [ ],
+        [ ],
+        [ ]
+    ],
+    "type": [
+        {"id": "1", "name": "单位"},
+        {"id": "2", "name": "指令"},
+        {"id": "4", "name": "Other（默认是标记）"},
+        {"id": "20", "name": "普通"},
+        {"id": "40", "name": "RIDE卡组纹章"},
+        {"id": "80", "name": "触发"},
+        {"id": "200", "name": "G"},
+        {"id": "4000", "name": "衍生"},
+        {"id": "10000", "name": "闪现"},
+        {"id": "20000", "name": "设置"},
+        {"id": "100000", "name": "纹章"}
+    ]
+}
