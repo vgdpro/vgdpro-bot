@@ -12,7 +12,8 @@
         "card_atk": "力量:",
         "card_def": "盾护:",
         "card_critical_strike": "☆:",
-        "card_text": "文本:"
+        "card_text": "文本:",
+        "card_defender": "守护者"
     },
     "skill": [
         {"id": "2", "name": "支援"},

@@ -59,12 +59,12 @@ export function apply(ctx: Context) {
 }
 
 function random() {
-  return Math.floor(Math.random() * (cards_json.cards.length - 1));
+  return Math.floor(Math.random() * (cards_json.length - 1));
 }
 
 function read_json_by_id(search_card: string) {
-  for (let i = 0; i< cards_json.cards.length; i++) {
-    if (cards_json.cards[i].card_id == search_card){ return [i]; }
+  for (let i = 0; i< cards_json.length; i++) {
+    if (cards_json[i].card_id == search_card){ return [i]; }
   }
   return []
 }
@@ -72,10 +72,10 @@ function read_json_by_id(search_card: string) {
 function read_json_by_name(search_card: string) {
   let search_result = [];
   let except = [];
-  for (let i = 0; i< cards_json.cards.length; i++) {
-    if (cards_json.cards[i].card_name == search_card){ return [i]; }
+  for (let i = 0; i< cards_json.length; i++) {
+    if (cards_json[i].card_name == search_card){ return [i]; }
     for (let search_character of search_card) {
-      if (cards_json.cards[i].card_name.includes(search_character)) {
+      if (cards_json[i].card_name.includes(search_character)) {
         if (search_result.indexOf(i) == -1 && except.indexOf(i) == -1) { search_result.push(i); }
       }else{
         if (search_result.indexOf(i) > -1) {
@@ -90,11 +90,11 @@ function read_json_by_name(search_card: string) {
   if (search_result.length == 0 && except.length > 0) {
     for (let i of except) {
       for (let search_character of search_card) {
-        if (!cards_json.cards[i].card_name.includes(search_character)) {
+        if (!cards_json[i].card_name.includes(search_character)) {
           t.push(i);
         }
       }
-      for (let name_character of cards_json.cards[i].card_name) {
+      for (let name_character of cards_json[i].card_name) {
         if (!search_card.includes(name_character)) {
           t.push(i);
         }
@@ -122,14 +122,14 @@ function result_card(group: number[], card: string, url: boolean = false) {
 
 function chk_message(table: number[], card: string, url: boolean = false) {
   let result_table = []
-  result_table = table.filter((i) => cards_json.cards[i].card_name.includes(card));
+  result_table = table.filter((i) => cards_json[i].card_name.includes(card));
   if (result_table.length > 0){
-    result_table.sort((a, b) => cards_json.cards[a].card_name.length - cards_json.cards[b].card_name.length)
+    result_table.sort((a, b) => cards_json[a].card_name.length - cards_json[b].card_name.length)
     return result_message(result_table[0], url);
   }
-  result_table = table.filter((i) => cards_json.cards[i].card_name.length >= card,length);
+  result_table = table.filter((i) => cards_json[i].card_name.length >= card,length);
   if (result_table.length > 0){
-    result_table.sort((a, b) => cards_json.cards[a].card_name.length - cards_json.cards[b].card_name.length)
+    result_table.sort((a, b) => cards_json[a].card_name.length - cards_json[b].card_name.length)
     return result_message(result_table[0], url);
   }
   return search_none;
@@ -137,19 +137,19 @@ function chk_message(table: number[], card: string, url: boolean = false) {
 
 function result_message(i: number, url: boolean = false) {
   let table=[
-    cards_json.cards[i].card_name,
-    cards_json.cards[i].card_id,
-    cards_json.cards[i].card_country,
-    cards_json.cards[i].card_bloc,
-    cards_json.cards[i].card_type,
-    cards_json.cards[i].card_setcard,
-    cards_json.cards[i].card_level,
-    cards_json.cards[i].card_skill,
-    cards_json.cards[i].card_trigger,
-    cards_json.cards[i].card_atk,
-    cards_json.cards[i].card_def,
-    cards_json.cards[i].card_critical_strike,
-    cards_json.cards[i].card_text
+    cards_json[i].card_name,
+    cards_json[i].card_id,
+    cards_json[i].card_country,
+    cards_json[i].card_bloc,
+    cards_json[i].card_type,
+    cards_json[i].card_setcard,
+    cards_json[i].card_level,
+    cards_json[i].card_skill,
+    cards_json[i].card_trigger,
+    cards_json[i].card_atk,
+    cards_json[i].card_def,
+    cards_json[i].card_critical_strike,
+    cards_json[i].card_text
   ];
   if (url) { return 'https://gitee.com/jwyxym/vgdpro-pics/raw/main/' + table[1] + '.jpg'; }
   let example=[
@@ -165,72 +165,60 @@ function result_message(i: number, url: boolean = false) {
     strings_json.text.card_atk,
     strings_json.text.card_def,
     strings_json.text.card_critical_strike,
-    strings_json.text.card_text
+    strings_json.text.card_text,
+    strings_json.text.card_defender
   ]
   let str = '找到卡片';
+  let sn: number;
   for (let ct = 0; ct < table.length; ct++) {
-    if (ct == 5) {
-      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f')).length > 0) {
-        let race = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f'));
+    if (ct == 2) {
+      if (table[ct][0] != '-') {
         str += '\n';
-        str += example[ct][0];
+        str += example[ct];
         str += '\u00A0';
-        str += '\u00A0';
-        let a = 0;
-        race.forEach(element => {
-          if (a > 0) {
-            str += '|';
-          }
-          str += setcard(element.replace(/^0+/g, ''));
-          a++;
-        });
+        let g = get_country(table[ct], strings_json.country);
+        str += g[0];
+        sn = Number(g[1]);
       }
-      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f'))).length > 0) {
-        let spell_type = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f')));
+    }
+    else if (ct == 3 && sn > 0) {
+      str += get([table[ct]], example[ct], strings_json.bloc[sn]);
+    }
+    else if (ct == 4) {
+      str += get(table[ct], example[ct], strings_json.type);
+    }
+    else if (ct == 5) {
+      str += get_setcard(table[ct], example[ct]);
+    }
+    else if (ct == 7) {
+      str += get(table[ct], example[ct], strings_json.skill);
+      if (cards_json[i].card_defender == 'defender') {
+        if (Array.from(get(table[ct], example[ct], strings_json.skill)).length > 1) {
+          str += '\u00A0';
+          str += '|';
+          str += '\u00A0';
+        } else {
+          str += '\n';
+          str += example[ct];
+          str += '\u00A0';
+          str += example[13]
+        }
+      }
+    }
+    else if (ct == 8) {
+      str += get(table[ct], example[ct], strings_json.trigger);
+    }
+    else if (ct == 9 || ct == 10 || ct == 11) {
+      if (table[ct] === '-') { continue; }
+      if (table[4].indexOf('1') > -1) {
         str += '\n';
-        str += example[ct][1];
+        str += example[ct];
         str += '\u00A0';
         str += '\u00A0';
-        let a = 0;
-        spell_type.forEach(element => {
-          if (a > 0) {
-            str += '|';
-          }
-          str += setcard(element.replace(/^0+/g, ''));
-          a++;
-        });
+        str += table[ct];
       }
-      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff')).length > 0) {
-        let name = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff'));
-        str += '\n';
-        str += example[ct][2];
-        str += '\u00A0';
-        str += '\u00A0';
-        let a = 0;
-        name.forEach(element => {
-          if (a > 0) {
-            str += '|';
-          }
-          str += setcard(element.replace(/^0+/g, ''));
-          a++;
-        });
-      }
-      if (table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f')).length > 0) {
-        let skill = table[ct].filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f'));
-        str += '\n';
-        str += example[ct][3];
-        str += '\u00A0';
-        str += '\u00A0';
-        let a = 0;
-        skill.forEach(element => {
-          if (a > 0) {
-            str += '|';
-          }
-          str += setcard(element.replace(/^0+/g, ''));
-          a++;
-        });
-      }
-    } else {
+    }
+    else {
       if (table[ct] === '-') { continue; }
       str += '\n';
       str += example[ct];
@@ -280,4 +268,119 @@ function setcard(setcard: string) {
   for (let i = 0; i< setcard_json.length; i++){
     if (setcard_json[i].id == setcard){ return setcard_json[i].name; }
   }
+}
+
+function get_country(table: string[], country) {
+  let str = ' '
+  let a = 0;
+  let sn = '-1';
+  for (let i = 0; i < table.length; i++) {
+    for (let ct = 0; ct < country.length; ct++) {
+      if (table[i] == country[ct].id) {
+        if (a > 0) {
+          str += '\u00A0';
+          str += '|';
+          str += '\u00A0';
+        }
+        str += country[ct].name;
+        if (Number(sn) < 0) { sn = country[ct].serial_number}
+        a++;
+      }
+    }
+  }
+  return [str, sn]
+}
+
+function get_setcard(table, example) {
+  let str = ' '
+  if (table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f')).length > 0) {
+    let race = table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('1') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('3f'));
+    str += '\n';
+    str += example[0];
+    str += '\u00A0';
+    str += '\u00A0';
+    let a = 0;
+    race.forEach(element => {
+      if (a > 0) {
+        str += '|';
+      }
+      str += setcard(element.replace(/^0+/g, ''));
+      a++;
+    });
+  }
+  if (table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f'))).length > 0) {
+    let spell_type = table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal(change_hex_string('3040')) && hex_to_decimal(change_hex_string(a)) < hex_to_decimal(change_hex_string('c06f')));
+    str += '\n';
+    str += example[1];
+    str += '\u00A0';
+    str += '\u00A0';
+    let a = 0;
+    spell_type.forEach(element => {
+      if (a > 0) {
+        str += '\u00A0';
+        str += '|';
+        str += '\u00A0';
+      }
+      str += setcard(element.replace(/^0+/g, ''));
+      a++;
+    });
+  }
+  if (table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff')).length > 0) {
+    let name = table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('70') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('1ff'));
+    str += '\n';
+    str += example[2];
+    str += '\u00A0';
+    str += '\u00A0';
+    let a = 0;
+    name.forEach(element => {
+      if (a > 0) {
+        str += '\u00A0';
+        str += '|';
+        str += '\u00A0';
+      }
+      str += setcard(element.replace(/^0+/g, ''));
+      a++;
+    });
+  }
+  if (table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f')).length > 0) {
+    let skill = table.filter((a) => hex_to_decimal(change_hex_string(a)) >= hex_to_decimal('200') && hex_to_decimal(change_hex_string(a)) < hex_to_decimal('21f'));
+    str += '\n';
+    str += example[3];
+    str += '\u00A0';
+    str += '\u00A0';
+    let a = 0;
+    skill.forEach(element => {
+      if (a > 0) {
+        str += '\u00A0';
+        str += '|';
+        str += '\u00A0';
+      }
+      str += setcard(element.replace(/^0+/g, ''));
+      a++;
+    });
+  }
+  return str;
+}
+
+function get(table: string[], example_text: string, bloc) {
+  let str = ' '
+  if (table[0] == '-') { return str; }
+  str += '\n';
+  str += example_text;
+  str += '\u00A0';
+  let a = 0;
+  for (let i = 0; i < table.length; i++) {
+    for (let ct = 0; ct < bloc.length; ct++) {
+      if (table[i] == bloc[ct].id) {
+        if (a > 0) {
+          str += '\u00A0';
+          str += '|';
+          str += '\u00A0';
+        }
+        str += bloc[ct].name;
+        a++;
+      }
+    }
+  }
+  return str;
 }
