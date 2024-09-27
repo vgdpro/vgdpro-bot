@@ -208,7 +208,7 @@ function result_message(i: number, url: boolean = false) {
       str += get(table[ct], example[ct], strings_json.trigger);
     }
     else if (ct == 9 || ct == 10 || ct == 11) {
-      if (table[ct] === '-') { continue; }
+      if (table[ct] < 0) { continue; }
       if (table[4].indexOf('1') > -1) {
         str += '\n';
         str += example[ct];
