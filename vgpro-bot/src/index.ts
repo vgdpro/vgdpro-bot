@@ -16,17 +16,13 @@ const numbers_string = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', '
 
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-const message = [
-  'VGPro是一款由VGPro制作组自主研发的一款全新开放世界打牌游戏，游戏发生在一个被称作「卡片战斗先导者」的幻想牌桌，在这里，被命运选中的人将被授予「命运者卡片」，获得挑战命运的机会。你将扮演被「命运者卡片」选中的其中一人，以先导者对战，争夺改变命运的力量——同时，逐步发掘「命运大战」的真相。',
-  '你好，我是VGProject官方机器人，你可以使用/sc命令搜索卡片，或使用/rc命令随机抽出卡池中的一张卡。',
-  '欢迎加入VGPro官方用户群，在这里，你可以询问一切关于VGPro的东西'
-]
-
 const cards_json = JSON.parse(readFileSync('./external/cards.json', 'utf8'));
 
 const setcard_json = JSON.parse(readFileSync('./external/setcard.json', 'utf8'));
 
 const strings_json = JSON.parse(readFileSync('./external/strings.json', 'utf8'));
+
+const message = strings_json.explain
 
 export function apply(ctx: Context) {
   ctx.command("sc <card>")
@@ -53,9 +49,12 @@ export function apply(ctx: Context) {
     session.send((0, koishi.h)('message', message[1]));
   })
   ctx.command("vgpro用户群").action(({session})=>{
-     let url = ''//待填入
+     let url = 'https://gitee.com/jwyxym/vgdpro-pics/raw/main/qq.jpg'
     session.send((0, koishi.h)('message', message[2], (0, koishi.h)('image', { url: url })));
   })
+  ctx.command("使用说明").action(({session})=>{
+    session.send((0, koishi.h)('message', message[3]));
+ })
 }
 
 function random() {
@@ -85,7 +84,7 @@ function read_json_by_name(search_card: string) {
       for (let search_character of Array.from( search_card )) {
         if (cards_json[i].card_name.includes(search_character)) { a++; }
       }
-      if (a > 0 && a > Array.from(cards_json[i].card_name).length - Array.from(cards_json[i].card_name).length / 2) {
+      if (a > 0 && a > (Array.from(cards_json[i].card_name).length / 2)) {
         search_result_n.push(a);
         search_result.push(i);
       }
@@ -99,7 +98,7 @@ function read_json_by_name(search_card: string) {
   }
   if (search_result.length > 0) {
     let a = 0;
-    let result = 0;
+    let result = -1;
     for (let i = 0; i < search_result.length; i++) {
       let num1 = search_result_n[i];
       let num2 = search_result[i];
@@ -108,7 +107,7 @@ function read_json_by_name(search_card: string) {
         result = num2;
       }
     }
-    return [result];
+    if (result > -1) return [result];
   }
   return [];
 }
