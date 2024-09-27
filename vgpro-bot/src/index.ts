@@ -66,71 +66,56 @@ function read_json_by_id(search_card: string) {
   for (let i = 0; i< cards_json.length; i++) {
     if (cards_json[i].card_id == search_card){ return [i]; }
   }
-  return []
+  return [];
 }
 
 function read_json_by_name(search_card: string) {
-  let search_result = [];
-  let except = [];
+  let include_result: number[] = [];
+  let search_result_n: number[] = [];
+  let search_result: number[] = [];
   for (let i = 0; i< cards_json.length; i++) {
     if (cards_json[i].card_name == search_card){ return [i]; }
-    for (let search_character of search_card) {
-      if (cards_json[i].card_name.includes(search_character)) {
-        if (search_result.indexOf(i) == -1 && except.indexOf(i) == -1) { search_result.push(i); }
-      }else{
-        if (search_result.indexOf(i) > -1) {
-          const indexToRemove = search_result.findIndex(element => element === i);
-          search_result.splice(indexToRemove, 1);
-          except.push(i);
-        }
+    if (cards_json[i].card_name.includes(search_card)) {
+      if (include_result.indexOf(i) == -1) {
+        include_result.push(i);
+      }
+    }
+    else {
+      let a = 0;
+      for (let search_character of Array.from( search_card )) {
+        if (cards_json[i].card_name.includes(search_character)) { a++; }
+      }
+      if (a > 0 && a > Array.from(cards_json[i].card_name).length - Array.from(cards_json[i].card_name).length / 2) {
+        search_result_n.push(a);
+        search_result.push(i);
       }
     }
   }
-  let t = [];
-  if (search_result.length == 0 && except.length > 0) {
-    for (let i of except) {
-      for (let search_character of search_card) {
-        if (!cards_json[i].card_name.includes(search_character)) {
-          t.push(i);
-        }
-      }
-      for (let name_character of cards_json[i].card_name) {
-        if (!search_card.includes(name_character)) {
-          t.push(i);
-        }
-      }
-    }
-    search_result = except.filter((i) => t.filter((element) => element === i).length <= 6);
-    if (search_result.length > 0) {
-      search_result.sort((a, b) => t.filter((element) => element === a).length - t.filter((element) => element === b).length);
-      return [search_result[0]];
-    }
-    return [];
+  if (include_result.length > 0) {
+    include_result.sort((a, b) =>{
+      return cards_json[a].card_name.length - cards_json[b].card_name.length
+    })
+    return include_result;
   }
-  return search_result;
+  if (search_result.length > 0) {
+    let a = 0;
+    let result = 0;
+    for (let i = 0; i < search_result.length; i++) {
+      let num1 = search_result_n[i];
+      let num2 = search_result[i];
+      if (a < num1) {
+        a = num1;
+        result = num2;
+      }
+    }
+    return [result];
+  }
+  return [];
 }
 
 function result_card(group: number[], card: string, url: boolean = false) {
   if (group.length > 0) {
-    if (group.length == 1) { return result_message(group[0], url); }
-    else if (group.length > 1) {
-      return chk_message(group, card, url);
-    }
-  }
-  return search_none;
-}
-
-function chk_message(table: number[], card: string, url: boolean = false) {
-  let result_table = []
-  result_table = table.filter((i) => cards_json[i].card_name.includes(card));
-  if (result_table.length > 0){
-    result_table.sort((a, b) => cards_json[a].card_name.length - cards_json[b].card_name.length)
-    return result_message(result_table[0], url);
-  }
-  result_table = table.filter((i) => cards_json[i].card_name.length >= card,length);
-  if (result_table.length > 0){
-    result_table.sort((a, b) => cards_json[a].card_name.length - cards_json[b].card_name.length)
-    return result_message(result_table[0], url);
+    return result_message(group[0], url);
   }
   return search_none;
 }
@@ -185,7 +170,12 @@ function result_message(i: number, url: boolean = false) {
       str += get([table[ct]], example[ct], strings_json.bloc[sn]);
     }
     else if (ct == 4) {
-      str += get(table[ct], example[ct], strings_json.type);
+      if (table[ct].indexOf('4') > -1) {
+        let type_table = table[ct].filter(a => a != '4')
+        if (type_table.length > 0) { str += get(type_table, example[ct], strings_json.type); }
+        else { str += get(table[ct], example[ct], strings_json.type); }
+      }
+      else { str += get(table[ct], example[ct], strings_json.type); }
     }
     else if (ct == 5) {
       str += get_setcard(table[ct], example[ct]);
