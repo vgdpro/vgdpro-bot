@@ -170,7 +170,17 @@ function result_message(i: number, url: boolean = false) {
       str += get([table[ct]], example[ct], strings_json.bloc[sn]);
     }
     else if (ct == 4) {
-      if (table[ct].indexOf('4') > -1) {
+      if (table[ct].indexOf('2') > -1) {
+        if (table[ct].length > 1) { str += get(table[ct], example[ct], strings_json.type); }
+        else {
+          str += get(table[ct], example[ct], strings_json.type);
+          str += '\u00A0';
+          str += '|';
+          str += '\u00A0';
+          str += strings_json.type[3].name;
+        }
+      }
+      else if (table[ct].indexOf('4') > -1) {
         let type_table = table[ct].filter(a => a != '4')
         if (type_table.length > 0) { str += get(type_table, example[ct], strings_json.type); }
         else { str += get(table[ct], example[ct], strings_json.type); }
