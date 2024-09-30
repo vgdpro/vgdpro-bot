@@ -165,8 +165,10 @@ function result_message(i: number, url: boolean = false) {
         sn = Number(g[1]);
       }
     }
-    else if (ct == 3 && sn > 0) {
-      str += get([table[ct]], example[ct], strings_json.bloc[sn]);
+    else if (ct == 3) {
+      if (Number(sn) > -1) {
+        str += get([table[ct]], example[ct], strings_json.bloc[sn]);
+      }
     }
     else if (ct == 4) {
       if (table[ct].indexOf('2') > -1) {
