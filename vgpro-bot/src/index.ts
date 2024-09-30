@@ -366,7 +366,7 @@ function get_setcard(table, example) {
 function get(table: string[], example_text: string, bloc) {
   let str_1 = ' ';
   let str_2 = ' ';
-  if (table[0] == '-') { return str; }
+  if (table[0] == '-') { return ' '; }
   str_1 += '\n';
   str_1 += example_text;
   str_1 += '\u00A0';
