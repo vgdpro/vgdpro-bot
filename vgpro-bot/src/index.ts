@@ -166,7 +166,7 @@ function result_message(i: number, url: boolean = false) {
       }
     }
     else if (ct == 3) {
-      if (Number(sn) > -1) {
+      if (Number(sn) > -1 && strings_json.bloc[sn].length > 0) {
         str += get([table[ct]], example[ct], strings_json.bloc[sn]);
       }
     }
