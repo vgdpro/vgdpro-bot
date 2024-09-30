@@ -364,24 +364,25 @@ function get_setcard(table, example) {
 }
 
 function get(table: string[], example_text: string, bloc) {
-  let str = ' '
+  let str_1 = ' ';
+  let str_2 = ' ';
   if (table[0] == '-') { return str; }
-  str += '\n';
-  str += example_text;
-  str += '\u00A0';
+  str_1 += '\n';
+  str_1 += example_text;
+  str_1 += '\u00A0';
   let a = 0;
   for (let i = 0; i < table.length; i++) {
     for (let ct = 0; ct < bloc.length; ct++) {
       if (table[i] == bloc[ct].id) {
         if (a > 0) {
-          str += '\u00A0';
-          str += '|';
-          str += '\u00A0';
+          str_2 += '\u00A0';
+          str_2 += '|';
+          str_2 += '\u00A0';
         }
-        str += bloc[ct].name;
+        str_2 += bloc[ct].name;
         a++;
       }
     }
   }
-  return str;
+  return str_1 + str_2;
 }
