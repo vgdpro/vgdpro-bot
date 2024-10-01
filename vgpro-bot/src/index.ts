@@ -66,7 +66,7 @@ export function apply(ctx: Context) {
     session.send((0, koishi.h)('message', message[1]));
   })
   ctx.command("使用说明").action(({session})=>{
-    session.send((0, koishi.h)('message', message[3]));
+    session.send((0, koishi.h)('message', message[2]));
  })
 }
 
