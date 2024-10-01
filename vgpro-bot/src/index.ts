@@ -5,7 +5,7 @@ export const name = 'cardsearch'
 export interface Config {}
 
 export const Config: Schema<Config> = Schema.object({})
-//
+
 const koishi = require("koishi");
 
 const { readFileSync, writeFileSync } = require('fs');
@@ -42,15 +42,28 @@ export function apply(ctx: Context) {
     let url = result_message(random_code, true);
     session.send((0, koishi.h)('message', text, (0, koishi.h)('image', { url: url })));
   })
-  ctx.command("vgpro").action(({session})=>{
-    session.send((0, koishi.h)('message', message[0]));
+  ctx.command("vgpro <str>").action(({session}, str: string)=>{
+    if (!str) {
+      session.send((0, koishi.h)('message', message[0]));
+    }
+    else if (str === '官网') {
+      session.send((0, koishi.h)('message', 'VGPro官网制作中，尽情期待'));
+    }
+    else if (str === '用户群') {
+      session.send((0, koishi.h)('message', 'VGPro用户群群号：655640394，如果遇到bug可以加群反馈'));
+    }
+    else if (str === '开发群') {
+      session.send((0, koishi.h)('message', '欢迎加入VGPro开发群群号：721095458，VGPro项目也需要你的一份力量'));
+    }
+    else if (str === '下载') {
+      session.send((0, koishi.h)('message', 'VGPro游戏制作中，尽情期待'));
+    }
+    else if (str === '作者频道') {
+      session.send((0, koishi.h)('message', 'VGPro项目主创：今晚有宵夜吗，你可以在Bilibili关注得到更多关于VGPro的消息'));
+    }
   })
   ctx.command("关于").action(({session})=>{
     session.send((0, koishi.h)('message', message[1]));
-  })
-  ctx.command("vgpro用户群").action(({session})=>{
-     let url = 'https://gitee.com/jwyxym/vgdpro-pics/raw/main/qq.jpg'
-    session.send((0, koishi.h)('message', message[2], (0, koishi.h)('image', { url: url })));
   })
   ctx.command("使用说明").action(({session})=>{
     session.send((0, koishi.h)('message', message[3]));
