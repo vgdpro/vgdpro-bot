@@ -205,9 +205,10 @@ function result_message(i: number, url: boolean = false) {
       str += get_setcard(table[ct], example[ct]);
     }
     else if (ct == 7) {
-      str += get(table[ct], example[ct], strings_json.skill);
+      let add_str = get(table[ct], example[ct], strings_json.skill);
+      str += add_str
       if (cards_json[i].card_defender == 'defender') {
-        if (Array.from(get(table[ct], example[ct], strings_json.skill)).length > 1) {
+        if (Array.from(add_str).length > 1) {
           str += '\u00A0';
           str += '|';
           str += '\u00A0';
@@ -215,8 +216,8 @@ function result_message(i: number, url: boolean = false) {
           str += '\n';
           str += example[ct];
           str += '\u00A0';
-          str += example[13]
         }
+        str += example[13];
       }
     }
     else if (ct == 8) {
