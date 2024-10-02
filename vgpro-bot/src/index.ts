@@ -47,7 +47,7 @@ export function apply(ctx: Context) {
       session.send((0, koishi.h)('message', message[0]));
     }
     else if (str === '官网') {
-      session.send((0, koishi.h)('message', 'VGPro官网制作中，尽情期待'));
+      session.send((0, koishi.h)('message', 'VGPro官网制作中，敬请期待'));
     }
     else if (str === '用户群') {
       session.send((0, koishi.h)('message', 'VGPro用户群群号：655640394，如果遇到bug可以加群反馈'));
@@ -56,7 +56,7 @@ export function apply(ctx: Context) {
       session.send((0, koishi.h)('message', '欢迎加入VGPro开发群群号：721095458，VGPro项目也需要你的一份力量'));
     }
     else if (str === '下载') {
-      session.send((0, koishi.h)('message', 'VGPro游戏制作中，尽情期待'));
+      session.send((0, koishi.h)('message', 'VGPro游戏制作中，敬请期待'));
     }
     else if (str === '作者频道') {
       session.send((0, koishi.h)('message', 'VGPro项目主创：今晚有宵夜吗，你可以在Bilibili关注得到更多关于VGPro的消息'));
