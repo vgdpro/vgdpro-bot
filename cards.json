@@ -30626,8 +30626,8 @@
     {
         "card_name": "顶点偶像 帕西菲卡",
         "card_id": "10504004",
-        "card_country": ["20"],
-        "card_bloc": "1",
+        "card_country": ["40"],
+        "card_bloc": "-",
         "card_type": ["1", "20"],
         "card_setcard": ["00c6", "500d"],
         "card_level": "3",
@@ -30658,8 +30658,8 @@
     {
         "card_name": "行星偶像 帕西菲卡",
         "card_id": "10504006",
-        "card_country": ["20"],
-        "card_bloc": "1",
+        "card_country": ["40"],
+        "card_bloc": "-",
         "card_type": ["1", "20"],
         "card_setcard": ["00c6", "500d"],
         "card_level": "3",
@@ -30914,8 +30914,8 @@
     {
         "card_name": "华光之约定 凯尔特",
         "card_id": "10504024",
-        "card_country": ["20"],
-        "card_bloc": "1",
+        "card_country": ["40"],
+        "card_bloc": "-",
         "card_type": ["1", "20"],
         "card_setcard": ["00c7", "500d"],
         "card_level": "2",
@@ -31090,8 +31090,8 @@
     {
         "card_name": "华光之约定 莱特",
         "card_id": "10504035",
-        "card_country": ["20"],
-        "card_bloc": "1",
+        "card_country": ["40"],
+        "card_bloc": "-",
         "card_type": ["1", "20"],
         "card_setcard": ["00c7", "500d"],
         "card_level": "1",
