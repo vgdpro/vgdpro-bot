@@ -10,8 +10,6 @@ const koishi = require("koishi");
 
 const { readFileSync, writeFileSync } = require('fs');
 
-const search_none = '未找到符合条件的卡片';
-
 const numbers_string = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
 
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -31,7 +29,7 @@ export function apply(ctx: Context) {
     let group: number[];
     if (is_number(card)) { group = read_json_by_id(card); } else { group = read_json_by_name(card); }
     let text = result_card(group, card);
-    if (text === search_none) { return text; } else {
+    if (text === strings_json.search_none) { return text; } else {
       let url = result_card(group, card, true);
       session.send((0, koishi.h)('message', text, (0, koishi.h)('image', { url: url })));
     }
@@ -129,7 +127,7 @@ function result_card(group: number[], card: string, url: boolean = false) {
   if (group.length > 0) {
     return result_message(group[0], url);
   }
-  return search_none;
+  return strings_json.search_none;
 }
 
 function result_message(i: number, url: boolean = false) {

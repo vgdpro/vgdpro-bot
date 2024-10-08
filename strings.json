@@ -1,4 +1,5 @@
 {
+    "search_none": "未找到符合条件的卡片",
     "text": {
         "card_name": "卡名:",
         "card_id": "VGPro卡号:",
