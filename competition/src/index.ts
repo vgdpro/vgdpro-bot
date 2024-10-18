@@ -252,7 +252,10 @@ export function apply(ctx: Context) {
       let wdl = getjson(filePath, 'wdl');
       let core = getjson(filePath, 'core');
       let turn_count = getjson(filePath, 'count')[0];
-      let str = '第' + turn_count.toString() +'轮:\n';
+      let mode = ['瑞士轮', '淘汰赛'];
+      let mode_count = 0;
+      if (getjson(filePath, 'mode')[0] == 'e') { mode_count++; }
+      let str = mode[mode_count] + '\u00A0\u00A0第' + turn_count.toString() +'轮' + ':\n' ;
       let a = 1;
       if (turn_count == 0) {
         array.sort((a, b) => a.localeCompare(b));
