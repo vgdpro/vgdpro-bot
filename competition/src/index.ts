@@ -283,17 +283,17 @@ export function apply(ctx: Context) {
     else if (parameter == 'help') {
       let str = 'VGPro官方机器人比赛模式使用中，接下来是指令介绍：';
       str += '\n\u00A0\u00A01：/cp help (获得指令帮助)';
-      str += '\n\u00A0\u00A02：/cp start <比赛名称> <比赛模式> <比赛保存时间> (创建一个比赛，模式为“淘汰赛”或“瑞士轮”，即“e”和“s”)';
-      str += '\n\u00A0\u00A03：/cp end <比赛名称> (结束一个比赛)';
-      str += '\n\u00A0\u00A04：/cp add <比赛名称> <选手名称> (为比赛添加一名选手)';
-      str += '\n\u00A0\u00A05：/cp del <比赛名称> <选手名称> (为比赛删除一名选手)';
-      str += '\n\u00A0\u00A06：/cp newTurn <比赛名称> (开始新的一轮比赛)';
-      str += '\n\u00A0\u00A07：/cp reTurn <比赛名称> (重新开始这一轮比赛)';
-      str += '\n\u00A0\u00A08：/cp <win|draw|lose> <比赛名称> <选手名称> (提交比分：胜|平|负)';
-      str += '\n\u00A0\u00A09：/cp reSubmitScore <比赛名称> <选手名称> <win|draw|lose|比分> (重新提交一名选手的比分，win|draw|lose为当前此轮比分，瑞士轮可改全局比分，如“胜-胜-负-平”即填“3-3-0-1”)';
-      str += '\n\u00A0\u00A010：/cp check <比赛名称> <选手名称> (查询选手比分)';
-      str += '\n\u00A0\u00A011：/cp list <比赛名称> (显示比赛成员列表)';
-      str += '\n\u00A0\u00A012：/cp modeChange <比赛名称> [出轮人数] (更改比赛模式，主要用于瑞士轮出轮后改为淘汰赛)';
+      str += '\n\u00A0\u00A02：/cp start &lt;比赛名称&gt; &lt;比赛模式&gt; [比赛保存时间] (创建一个比赛，模式为“淘汰赛”或“瑞士轮”，即“e”和“s”)';
+      str += '\n\u00A0\u00A03：/cp end &lt;比赛名称&gt; (结束一个比赛)';
+      str += '\n\u00A0\u00A04：/cp add &lt;比赛名称&gt; &lt;选手名称&gt; (为比赛添加一名选手)';
+      str += '\n\u00A0\u00A05：/cp del &lt;比赛名称&gt; &lt;选手名称&gt; (为比赛删除一名选手)';
+      str += '\n\u00A0\u00A06：/cp newTurn &lt;比赛名称&gt; (开始新的一轮比赛)';
+      str += '\n\u00A0\u00A07：/cp reTurn &lt;比赛名称&gt; (重新开始这一轮比赛)';
+      str += '\n\u00A0\u00A08：/cp &lt;win|draw|lose&gt; &lt;比赛名称&gt; &lt;选手名称&gt; (提交比分：胜|平|负)';
+      str += '\n\u00A0\u00A09：/cp reSubmitScore &lt;比赛名称&gt; &lt;选手名称&gt; &lt;win|draw|lose|比分&gt; (重新提交一名选手的比分，win|draw|lose为当前此轮比分，瑞士轮可改全局比分，如“胜-胜-负-平”即填“3-3-0-1”)';
+      str += '\n\u00A0\u00A010：/cp check &lt;比赛名称&gt; &lt;选手名称&gt; (查询选手比分)';
+      str += '\n\u00A0\u00A011：/cp list &lt;比赛名称&gt; (显示比赛成员列表)';
+      str += '\n\u00A0\u00A012：/cp modeChange &lt;比赛名称&gt; [出轮人数] (更改比赛模式，主要用于瑞士轮出轮后改为淘汰赛)';
       return str;
     }
   })
