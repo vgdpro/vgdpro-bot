@@ -1,4 +1,5 @@
 import { select } from '@satorijs/element/jsx-runtime';
+import { console } from 'inspector';
 import { Context, Schema } from 'koishi'
 import internal from 'stream';
 
@@ -111,7 +112,15 @@ export function apply(ctx: Context) {
         }
         else {
           let players = getjson(filePath, 'players');
+          let core = getjson(filePath, 'core');
+          let wdl = getjson(filePath, 'wdl');
+          let turn_count = getjson(filePath, 'count')[0];
+          let opponent = getjson(filePath, 'opponent');
           if (players.length < player) { return '出轮人数过多！'; }
+          let arrays = relist(players, wdl, core, opponent, turn_count);
+          players = arrays[0];
+          wdl = arrays[1];
+          core = arrays[2];
           for (let i = Number(player); i < players.length; i++) {
             if (getjson(filePath, 'out').findIndex(item => item == players[i]) == -1) { json.out.push(players[i]); }
           }
@@ -241,7 +250,7 @@ export function apply(ctx: Context) {
       let str = player + '：\n\u00A0\u00A0' + wdl[count][0] + '-' + wdl[count][1] + '-' + wdl[count][2] + '\n\u00A0\u00A0总分：' + get_all_core(core, count).toString() + '\n\u00A0\u00A0累进分：' + get_accumulate_core(core, count).toString() + '\n\u00A0\u00A0对手：';
       for (let i = 0; i < opponent[count].length; i++) {
         str += '\n\u00A0\u00A0\u00A0\u00A0';
-        str += '第' + (i + 1) + '轮：';
+        str += '第' + (i + 1).toString() + '轮：';
         str += opponent[count][i];
       }
       return str;
@@ -252,6 +261,7 @@ export function apply(ctx: Context) {
       let wdl = getjson(filePath, 'wdl');
       let core = getjson(filePath, 'core');
       let turn_count = getjson(filePath, 'count')[0];
+      let opponent = getjson(filePath, 'opponent');
       let mode = ['瑞士轮', '淘汰赛'];
       let mode_count = 0;
       if (getjson(filePath, 'mode')[0] == 'e') { mode_count++; }
@@ -260,7 +270,7 @@ export function apply(ctx: Context) {
       if (turn_count == 0) {
         array.sort((a, b) => a.localeCompare(b));
       } else {
-        let arrays = relist(array, wdl, core, turn_count);
+        let arrays = relist(array, wdl, core, opponent, turn_count);
         array = arrays[0];
         wdl = arrays[1];
         core = arrays[2];
@@ -420,6 +430,9 @@ function distribute_opponent(filePath: string, parameter: string) {
     return check_count(wdl, count, players, getjson(filePath, 'out'), 'players')
   }
   let remove_g = [];
+  let str = '第' + (count + 1).toString() + '轮\n';
+  let table = [];
+  let bye = [];
   if (getjson(filePath, 'mode')[0] == 'e') {
     for (let i = 0; i < players.length; i++) {
       if (getjson(filePath, 'out').findIndex(item => item == players[i]) > -1) {
@@ -431,44 +444,49 @@ function distribute_opponent(filePath: string, parameter: string) {
       players.splice(ct, 1);
       core.splice(ct, 1);
     }
+    table = players.sort((a,b) => Math.floor(Math.random() * 3) - 2);
+    if (table.length % 2 > 0) {
+      bye.push(table[table.length - 1]);
+      table.splice(table.length - 1, 1);
+    }
   }
-  let str = '第' + (count + 1).toString() + '轮\n';
-  let bye = [];
-  let a = 0;
-  for (let i = 0; i < players.length; i++) {
-    if (get_accumulate_core(core, i) > a) { a = get_accumulate_core(core, i); }
-  }
-  let table = [];
-  while (a >= 0) {
-    let t = [];
-    /*---------------进行一个分组匹配---------------*/
+  else
+  {
+    let a = 0;
     for (let i = 0; i < players.length; i++) {
-      if (get_accumulate_core(core, i) == a) {
-        t.push(players[i]);
-      }
+      if (get_accumulate_core(core, i) > a) { a = get_accumulate_core(core, i); }
     }
-    if (t.length > 0) {
-      if (bye.length == 1) { t.push(bye[0]); }
-      if (t.length % 2 > 0) {
-        let ct = 0;
-        do {
-          ct = Math.floor(Math.random() * t.length);
+    while (a >= 0) {
+      let t = [];
+      /*---------------进行一个分组匹配---------------*/
+      for (let i = 0; i < players.length; i++) {
+        if (get_accumulate_core(core, i) == a) {
+          t.push(players[i]);
         }
-        while (bye.findIndex(item => item == t[ct]) > -1) {
-          ct = Math.floor(Math.random() * t.length);
+      }
+      if (t.length > 0) {
+        if (bye.length == 1) { t.push(bye[0]); }
+        if (t.length % 2 > 0) {
+          let ct = 0;
+          do {
+            ct = Math.floor(Math.random() * t.length);
+          }
+          while (bye.findIndex(item => item == t[ct]) > -1) {
+            ct = Math.floor(Math.random() * t.length);
+          }
+          bye = [t[ct]];
+          t.splice(ct, 1)
+        } else {
+          bye = [];
         }
-        bye = [t[ct]];
-        t.splice(ct, 1)
-      } else {
-        bye = [];
+        t.sort((a,b) => Math.floor(Math.random() * 3) - 2);
+        for (let i = 0; i < t.length; i++) {
+          table.push(t[i]);
+        }
       }
-      t.sort((a,b) => Math.floor(Math.random() * 3) - 2);
-      for (let i = 0; i < t.length; i++) {
-        table.push(t[i]);
-      }
+      /*-----------------------------------------------*/
+      a--;
     }
-    /*-----------------------------------------------*/
-    a--;
   }
   if (table.length > 0) {
     str += return_str(table, json, filePath);
@@ -490,7 +508,7 @@ function distribute_opponent(filePath: string, parameter: string) {
 }
 
 function return_str(array: string[], json, filePath: string) {
-  let tab = 1;
+  let tab = 0;
   let a = 0;
   let str = '';
   for (let i = 0; i < array.length; i++) {
@@ -521,6 +539,15 @@ function get_all_core(array: string[], count: number) {
   let a = 0;
   for(let i = 0; i < array[count].length; i++) {
     a += Number(array[count][i]);
+  }
+  return a;
+}
+
+function get_next_core(array: string[], count: number, opponent: string[], players: string[]) {
+  let a = 0;
+  for (let op of opponent[count]) {
+    let i = players.findIndex(item => item == op)
+    a += get_all_core(array, i);
   }
   return a;
 }
@@ -606,42 +633,83 @@ function add_score(player: string, filePath: string, parameter: string) {
   }
   return str;
 }
-function relist(players: string[], wdl: string[], core: string[], turn_count: number) {
+function relist(players: string[], wdl: string[], core: string[], opponent: string[], turn_count: number) {
   let array_players = [];
   let array_wdl = [];
   let array_core = [];
+  let array_players_I = [];
+  let array_wdl_I = [];
+  let array_core_I = [];
   let array_players_II = [];
   let array_wdl_II = [];
   let array_core_II = [];
-  let a = 0;
+  let all = 0;
+  let next = 0;
   for (let i = 0; i < players.length; i++) {
-    if (get_all_core(core, i) > a) { a = get_all_core(core, i); }
+    if (get_next_core(core, i, opponent, players) > next) { next = get_next_core(core, i, opponent, players); }
+    if (get_all_core(core, i) > all) { all = get_all_core(core, i); }
   }
   let ct = 0;
-  for (a; a >= 0; a--) {
-    array_players[ct] = [];
-    array_wdl[ct] = [];
-    array_core[ct] = [];
-    for (let i = 0; i < core.length; i++) {
-      if (get_all_core(core, i) == a) {
-        array_players[ct].push(players[i]);
-        array_wdl[ct].push(wdl[i]);
-        array_core[ct].push(core[i]);
+  for (all; all >= 0; all--) {
+    array_players_I[ct] = [];
+    array_wdl_I[ct] = [];
+    array_core_I[ct] = [];
+    for (let i = 0; i < players.length; i++) {
+      if (get_all_core(core, i) == all) {
+        array_players_I[ct].push(players[i])
+        array_wdl_I[ct].push(wdl[i])
+        array_core_I[ct].push(core[i])
       }
     }
     ct++;
   }
-  for (let i = 0; i < array_players.length; i++) {
-    for (a = turn_count; a >= 0; a--) {
-      for (let count = 0; count < array_wdl[i].length; count++) {
-        if (Number(array_wdl[i][count][0]) == a) {
-          array_players_II.push(array_players[i][count]);
-          array_wdl_II.push(array_wdl[i][count]);
-          array_core_II.push(array_core[i][count]);
+  for (ct = 0; ct < array_players_I.length; ct++) {
+    for (let i_next = next; i_next >= 0; i_next--) {
+      if (!array_players_II[ct]) {
+        array_players_II[ct] = [];
+        array_wdl_II[ct] = [];
+        array_core_II[ct] = [];
+      }
+      let a = 0;
+      for (let i = 0; i < array_players_II[ct].length; i++) {
+        a += array_players_II[ct][i].length;
+      }
+      if (a == array_players_I[ct].length) { break; }
+      let group_players = [];
+      let group_wdl = [];
+      let group_core = [];
+      for (let i = 0; i < array_players_I[ct].length; i++) {
+        let find = players.findIndex(item => item == array_players_I[ct][i])
+        if (get_next_core(core, find, opponent, players) == i_next) {
+          group_players.push(array_players_I[ct][i])
+          group_wdl.push(array_wdl_I[ct][i])
+          group_core.push(array_core_I[ct][i])
         }
+      }
+      if (group_players.length > 0) {
+        if (group_players.length > 1) {
+          group_players.sort((a,b) => {
+            let accumulate_a = get_accumulate_core(core, players.findIndex(item => item == a));
+            let accumulate_b = get_accumulate_core(core, players.findIndex(item => item == b));
+            if (accumulate_a > accumulate_b) { return 1; }
+            if (accumulate_a == accumulate_b) { return 0; }
+            if (accumulate_a < accumulate_b) { return -1; }
+          });
+        }
+        array_players_II[ct].push(group_players);
+        array_wdl_II[ct].push(group_wdl);
+        array_core_II[ct].push(group_core);
       }
     }
   }
-  // return [array_players, array_wdl, array_core]
-  return [array_players_II, array_wdl_II, array_core_II]
+  for (ct = 0; ct < array_players_II.length; ct++) {
+    for (let i = 0; i < array_players_II[ct].length; i++) {
+      for (let i_II = 0; i_II < array_players_II[ct][i].length; i_II++) {
+        array_players.push(array_players_II[ct][i][i_II]);
+        array_wdl.push(array_wdl_II[ct][i][i_II]);
+        array_core.push(array_core_II[ct][i][i_II]);
+      }
+    }
+  }
+  return [array_players, array_wdl, array_core]
 }
