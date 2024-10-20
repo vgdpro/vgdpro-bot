@@ -40,6 +40,7 @@ export function apply(ctx: Context) {
     }
     else if (parameter == 'add') {
       if (!exist(filePath)) { return '比赛不存在！'; }
+      if (getjson(filePath, 'count')[0] > 0) { return '比赛已开起，不可添加选手'; }
       if (check_player(filePath, player)) { return '选手已存在'; }
       let json = {player};
       let input = addjson(filePath, json);
@@ -48,6 +49,7 @@ export function apply(ctx: Context) {
     }
     else if (parameter == 'del') {
       if (!exist(filePath)) { return '比赛不存在！'; }
+      if (getjson(filePath, 'count')[0] > 0) { return '比赛已开起，不可删除选手'; }
       if (!check_player(filePath, player)) { return '选手不存在'; }
       let input = deljson(filePath, getjson(filePath, 'players').findIndex(item => item == player));
       writeFileSync(filePath, input);
@@ -85,7 +87,6 @@ export function apply(ctx: Context) {
         json.wdl[i].draw = json.core[i].filter(item => item == 1).length;
         json.wdl[i].lose = json.core[i].filter(item => item == 0).length;
       }
-      json.count[0] = getcount(filePath);
       writeFileSync(filePath, JSON.stringify(json));
       return distribute_opponent(filePath, 're');
     }
@@ -430,7 +431,9 @@ function distribute_opponent(filePath: string, parameter: string) {
     return check_count(wdl, count, players, getjson(filePath, 'out'), 'players')
   }
   let remove_g = [];
-  let str = '第' + (count + 1).toString() + '轮\n';
+  let turn_count = count;
+  if (parameter == 'new') { turn_count++; }
+  let str = '第' + turn_count.toString() + '轮\n';
   let table = [];
   let bye = [];
   if (getjson(filePath, 'mode')[0] == 'e') {
