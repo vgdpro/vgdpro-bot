@@ -310,20 +310,23 @@ export function apply(ctx: Context) {
         str += '\n\u00A0\u00A011：/cp list &lt;比赛名称&gt; (显示比赛成员列表)';
         str += '\n\u00A0\u00A012：/cp modeChange &lt;比赛名称&gt; [出轮人数] (更改比赛模式，主要用于瑞士轮出轮后改为淘汰赛)';
         return str;
-      } else if (getjson(filePath, 'mode')[0] == 's') {
-        let turn_count = 0;
-        let player_count = 4;
-        let players_count = getjson(filePath, 'players').length;
-        let n = 2;
-        if (players_count < 8) { return '人数过少，推荐使用淘汰赛制'; }
-        while (n < players_count) {
-          n * 2;
-          turn_count++;
+      } else {
+        if (!exist(filePath)) { return '比赛不存在！'; }
+        if (getjson(filePath, 'mode')[0] == 's') {
+          let turn_count = 0;
+          let player_count = 4;
+          let players_count = getjson(filePath, 'players').length;
+          let n = 2;
+          if (players_count < 8) { return '人数过少，推荐使用淘汰赛制'; }
+          while (n < players_count) {
+            n * 2;
+            turn_count++;
+          }
+          while (player_count * player_count < players_count) {
+            player_count * 2;
+          }
+          return '当前比赛共' + players_count + '人，推荐' + turn_count + '轮出' + player_count + '强';
         }
-        while (player_count * player_count < players_count) {
-          player_count * 2;
-        }
-        return '当前比赛共' + players_count + '人，推荐' + turn_count + '轮出' + player_count + '强'
       }
     }
   })
